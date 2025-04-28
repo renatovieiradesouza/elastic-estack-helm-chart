@@ -1,0 +1,10 @@
+# Default values for elk-chart.
+# This is a YAML-formatted file.
+
+# Namespace to deploy all resources
+namespace: default
+
+# # Global configurations
+# global:
+#   # You can add more global values here if needed in the future
+#   environment: production

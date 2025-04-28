@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kb
+  namespace: elastic-system
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production-http01
+    nginx.ingress.kubernetes.io/proxy-body-size: 64m
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "50"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 360s
+    nginx.ingress.kubernetes.io/proxy-next-upstream-timeout: 360s
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 360s
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 360s
+    xnginx.ingress.kubernetes.io/backend-protocol: HTTPS    
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: kibana.qa.saudesimples.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: kibana-kb-http
+            port:
+              number: 5601
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - kibana.qa.saudesimples.net
+    secretName: kibana.qa.saudesimples.net      

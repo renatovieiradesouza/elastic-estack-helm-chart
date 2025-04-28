@@ -1,0 +1,60 @@
+apiVersion: apm.k8s.elastic.co/v1
+kind: ApmServer
+metadata:
+  name: apm-server
+  namespace: elastic-system
+spec:
+  config:
+    auth:
+      secret_token: nOn5rm4hrh055mmH98xDkthEhhMzThY
+      anonymous:
+        enabled: true
+    queue:
+      mem:
+        events: 4096
+    rum:
+      enabled: true
+  http:
+    service:
+      metadata:
+        annotations:
+          xexternal-dns.alpha.kubernetes.io/hostname: apm.o
+          xetworking.gke.io/internal-load-balancer-allow-global-access: "true"
+          xnetworking.gke.io/load-balancer-type: Internal
+      spec:
+        type: ClusterIP #LoadBalancer ou NodePort
+    tls:
+      certificate: {}
+      selfSignedCertificate:
+        disabled: true
+  count: 1
+  podTemplate:
+    spec:
+      tolerations:
+      - key: stack-elk
+        value: "true"
+        operator: Equal
+        effect: NoExecute
+      nodeSelector:
+        stack-elk: "true"    
+      containers:                              
+      - name: apm-server
+        # Work around para adicionar secret_token no arquivo de configuração
+        command:
+        - sh
+        - -c
+        - |
+          sed -e s/secret_token/"auth:\n    secret_token"/g config/config-secret/..data/apm-server.yml > config/apm-fixed-server.yml
+          exec apm-server run -e -c config/apm-fixed-server.yml                  
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1000Mi
+          limits:
+            memory: 1000Mi
+            cpu: 500m
+  version: 8.9.0
+  elasticsearchRef:
+    name: elasticsearch
+  kibanaRef:
+    name: kibana

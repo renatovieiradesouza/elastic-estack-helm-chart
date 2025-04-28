@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  elk-chart:
+  - apiVersion: v2
+    appVersion: 8.9.0
+    created: "2025-04-28T12:32:16.178632057-03:00"
+    description: Um chart Helm para instalar o Elastic Stack (Elasticsearch, Kibana,
+      Fleet) baseado nos manifestos fornecidos.
+    digest: 3a2276de73531f3e2699200ff52a3536119dd2df15fba3ee05d0d2b3e73b64a1
+    name: elk-chart
+    type: application
+    urls:
+    - https://renatovieiradesouza.github.io/elastic-estack-helm-chart/elk-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-04-28T12:32:16.177941397-03:00"
